@@ -1,7 +1,6 @@
-//curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": { }}'
-
 const { Requester, Validator } = require('@chainlink/external-adapter')
 const Reddit = require('reddit')
+
 // Define custom error scenarios for the API.
 // Return true for the adapter to retry.
 const customError = (data) => {
@@ -17,6 +16,10 @@ const reddit = new Reddit({
   userAgent: 'tweether',
 })
 
+// Reddit API documentation for endpoints
+// https://www.reddit.com/dev/api/
+// Reddit NPM package documentation
+// https://www.npmjs.com/package/reddit
 const customParams = {
   sr: false,
   kind: false,
@@ -33,13 +36,13 @@ const createRequest = (input, callback) => {
   const jobRunID = validator.validated.id
   const endpoint = validator.validated.data.endpoint || '/api/submit'
   const sr = validator.validated.data.sr || 'testingground4bots'
-  const kind = validator.validated.data.kind || 'link'
+  const kind = validator.validated.data.kind || 'self'
   const resubmit = validator.validated.data.resubmit || 'false'
   const title = validator.validated.data.title || 'Test Title Here!'
   const text = validator.validated.data.text || 'Test Text Here!'
   const url = validator.validated.data.url || 'https://twitter.com/TweethTweet'
   reddit
-    .post('/api/submit', {
+    .post(endpoint, {
       sr: sr,
       kind: kind,
       resubmit: resubmit,
@@ -48,8 +51,8 @@ const createRequest = (input, callback) => {
       url: url,
     })
     .then((response) => {
-      response.data.result = Requester.validateResultNumber(response.data, [0])
-      callback(response.status, Requester.success(jobRunID, response))
+      response.json.data.result = response.json.data.id
+      callback(response.status, Requester.success(jobRunID, response.json))
     })
     .catch((error) => {
       callback(500, Requester.errored(jobRunID, error))
@@ -87,3 +90,6 @@ exports.handlerv2 = (event, context, callback) => {
 // This allows the function to be exported for testing
 // or for running in express
 module.exports.createRequest = createRequest
+
+// Sample Call
+// curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": {"url":"www.google.com" }}'

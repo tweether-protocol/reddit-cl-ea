@@ -1,18 +1,27 @@
 const assert = require('chai').assert
 const createRequest = require('../index.js').createRequest
+const URL = 'www.google.com'
 
 describe('createRequest', () => {
   const jobID = '1'
 
   context('successful calls', () => {
     const requests = [
-      { name: 'id not supplied', testData: { data: { base: 'ETH', quote: 'USD' } } },
-      { name: 'base/quote', testData: { id: jobID, data: { base: 'ETH', quote: 'USD' } } },
-      { name: 'from/to', testData: { id: jobID, data: { from: 'ETH', to: 'USD' } } },
-      { name: 'coin/market', testData: { id: jobID, data: { coin: 'ETH', market: 'USD' } } }
+      {
+        name: 'id not supplied',
+        testData: { data: { url: URL } },
+      },
+      {
+        name: 'url',
+        testData: { id: jobID, data: { url: URL } },
+      },
+      {
+        name: 'url, endpoint',
+        testData: { id: jobID, data: { url: URL, endpoint: '/api/submit' } },
+      },
     ]
 
-    requests.forEach(req => {
+    requests.forEach((req) => {
       it(`${req.name}`, (done) => {
         createRequest(req.testData, (statusCode, data) => {
           assert.equal(statusCode, 200)
@@ -30,13 +39,10 @@ describe('createRequest', () => {
     const requests = [
       { name: 'empty body', testData: {} },
       { name: 'empty data', testData: { data: {} } },
-      { name: 'base not supplied', testData: { id: jobID, data: { quote: 'USD' } } },
-      { name: 'quote not supplied', testData: { id: jobID, data: { base: 'ETH' } } },
-      { name: 'unknown base', testData: { id: jobID, data: { base: 'not_real', quote: 'USD' } } },
-      { name: 'unknown quote', testData: { id: jobID, data: { base: 'ETH', quote: 'not_real' } } }
+      // TODO
     ]
 
-    requests.forEach(req => {
+    requests.forEach((req) => {
       it(`${req.name}`, (done) => {
         createRequest(req.testData, (statusCode, data) => {
           assert.equal(statusCode, 500)
