@@ -1,5 +1,7 @@
-const { Requester, Validator } = require('@chainlink/external-adapter')
+//curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": { }}'
 
+const { Requester, Validator } = require('@chainlink/external-adapter')
+const Reddit = require('reddit')
 // Define custom error scenarios for the API.
 // Return true for the adapter to retry.
 const customError = (data) => {
@@ -7,51 +9,49 @@ const customError = (data) => {
   return false
 }
 
-// Define custom parameters to be used by the adapter.
-// Extra parameters can be stated in the extra object,
-// with a Boolean value indicating whether or not they
-// should be required.
+const reddit = new Reddit({
+  username: process.env.REDDIT_USER,
+  password: process.env.REDDIT_PASSWORD,
+  appId: process.env.REDDIT_API_KEY,
+  appSecret: process.env.REDDIT_API_SECRET,
+  userAgent: 'tweether',
+})
+
 const customParams = {
-  base: ['base', 'from', 'coin'],
-  quote: ['quote', 'to', 'market'],
-  endpoint: false
+  sr: false,
+  kind: false,
+  resubmit: false,
+  title: false,
+  text: false,
+  endpoint: false,
+  url: false,
 }
 
 const createRequest = (input, callback) => {
   // The Validator helps you validate the Chainlink request data
   const validator = new Validator(callback, input, customParams)
   const jobRunID = validator.validated.id
-  const endpoint = validator.validated.data.endpoint || 'price'
-  const url = `https://min-api.cryptocompare.com/data/${endpoint}`
-  const fsym = validator.validated.data.base.toUpperCase()
-  const tsyms = validator.validated.data.quote.toUpperCase()
-
-  const params = {
-    fsym,
-    tsyms
-  }
-
-  // This is where you would add method and headers
-  // you can add method like GET or POST and add it to the config
-  // The default is GET requests
-  // method = 'get' 
-  // headers = 'headers.....'
-  const config = {
-    url,
-    params
-  }
-
-  // The Requester allows API calls be retry in case of timeout
-  // or connection failure
-  Requester.request(config, customError)
-    .then(response => {
-      // It's common practice to store the desired value at the top-level
-      // result key. This allows different adapters to be compatible with
-      // one another.
-      response.data.result = Requester.validateResultNumber(response.data, [tsyms])
+  const endpoint = validator.validated.data.endpoint || '/api/submit'
+  const sr = validator.validated.data.sr || 'testingground4bots'
+  const kind = validator.validated.data.kind || 'link'
+  const resubmit = validator.validated.data.resubmit || 'false'
+  const title = validator.validated.data.title || 'Test Title Here!'
+  const text = validator.validated.data.text || 'Test Text Here!'
+  const url = validator.validated.data.url || 'https://twitter.com/TweethTweet'
+  reddit
+    .post('/api/submit', {
+      sr: sr,
+      kind: kind,
+      resubmit: resubmit,
+      title: title,
+      text: text,
+      url: url,
+    })
+    .then((response) => {
+      response.data.result = Requester.validateResultNumber(response.data, [0])
       callback(response.status, Requester.success(jobRunID, response))
     })
-    .catch(error => {
+    .catch((error) => {
       callback(500, Requester.errored(jobRunID, error))
     })
 }
@@ -79,7 +79,7 @@ exports.handlerv2 = (event, context, callback) => {
     callback(null, {
       statusCode: statusCode,
       body: JSON.stringify(data),
-      isBase64Encoded: false
+      isBase64Encoded: false,
     })
   })
 }
