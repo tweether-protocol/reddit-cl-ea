@@ -52,7 +52,8 @@ const createRequest = (input, callback) => {
     })
     .then((response) => {
       response.json.data.result = response.json.data.id
-      callback(200, Requester.success(jobRunID, response.json))
+      response.json.status = 200
+      callback(response.json.status, Requester.success(jobRunID, response.json))
     })
     .catch((error) => {
       callback(500, Requester.errored(jobRunID, error))
