@@ -1,33 +1,36 @@
-# Chainlink NodeJS External Adapter Template
+# Reddit Chainlink External Adapter
 
-This template provides a basic framework for developing Chainlink external adapters in NodeJS. Comments are included to assist with development and testing of the external adapter. Once the API-specific values (like query parameters and API key authentication) have been added to the adapter, it is very easy to add some tests to verify that the data will be correctly formatted when returned to the Chainlink node. There is no need to use any additional frameworks or to run a Chainlink node in order to test the adapter.
+The template allows a user to interact with the Reddit API. This uses the [Reddit API](https://www.reddit.com/dev/api/)
 
-## Creating your own adapter from this template
+## Quickstart
 
-Clone this repo and change "ExternalAdapterProject" below to the name of your project
-
-```bash
-git clone https://github.com/thodges-gh/CL-EA-NodeJS-Template.git ExternalAdapterProject
+After you [create an app in reddit](https://www.reddit.com/prefs/apps) you'll need 4 environment variables:
 ```
-
-Enter into the newly-created directory
-
-```bash
-cd ExternalAdapterProject
+REDDIT_API_KEY
+REDDIT_API_SECRET
+REDDIT_PASSWORD
+REDDIT_USER
 ```
-
-You can remove the existing git history by running:
+You'll get the top two in your reddit App, and the bottom two are just your reddit username and password. Then clone the repo:
 
 ```bash
-rm -rf .git
+git clone https://github.com/tweether-protocol/reddit-cl-ea
+cd reddit-cl-ea
 ```
 
 See [Install Locally](#install-locally) for a quickstart
 
 ## Input Params
 
-- `base`, `from`, or `coin`: The symbol of the currency to query
-- `quote`, `to`, or `market`: The symbol of the currency to convert to
+- `sr`: The subreddit name
+- `kind`: One of (link, self, image, video, videogif)
+- `resubmit`: Boolean to resubmit if you've already submit
+- `title`: Title
+- `text`: Text
+- `endpoint`: The endpoint
+- `url`: The URL if you pick link
+
+They default to the testing grounds, so you can leave them blank for testing. You can find more inputs at the [reddit documentation](https://www.reddit.com/dev/api/)
 
 ## Output
 

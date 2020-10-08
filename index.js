@@ -52,7 +52,7 @@ const createRequest = (input, callback) => {
     })
     .then((response) => {
       response.json.data.result = response.json.data.id
-      callback(response.status, Requester.success(jobRunID, response.json))
+      callback(200, Requester.success(jobRunID, response.json))
     })
     .catch((error) => {
       callback(500, Requester.errored(jobRunID, error))
@@ -92,4 +92,4 @@ exports.handlerv2 = (event, context, callback) => {
 module.exports.createRequest = createRequest
 
 // Sample Call
-// curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": {"url":"www.google.com" }}'
+// curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": {"title":"HELLO" }}'
