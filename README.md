@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/tweether-protocol/reddit-cl-ea/workflows/yarn/badge.svg)]
+[![Actions Status](https://github.com/tweether-protocol/reddit-cl-ea/workflows/yarn/badge.svg)](https://github.com/tweether-protocol/reddit-cl-ea/actions?query=workflow%3Ayarn)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tweether-protocol/reddit-cl-ea.svg)](http://isitmaintained.com/project/tweether-protocol/reddit-cl-ea "Percentage of issues still open")
 
 # Reddit Chainlink External Adapter
