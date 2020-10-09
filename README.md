@@ -1,3 +1,6 @@
+[![Actions Status](https://github.com/tweether-protocol/reddit-cl-ea/workflows/yarn/badge.svg)]
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/tweether-protocol/reddit-cl-ea.svg)](http://isitmaintained.com/project/tweether-protocol/reddit-cl-ea "Percentage of issues still open")
+
 # Reddit Chainlink External Adapter
 
 The template allows a user to interact with the Reddit API. This uses the [Reddit API](https://www.reddit.com/dev/api/)
